@@ -10,6 +10,7 @@ use Frontend\Core\Engine\Model as FrontendModel;
 use Frontend\Core\Engine\Language as FL;
 use Frontend\Modules\Mailmotor\Engine\CMHelper as FrontendMailmotorCMHelper;
 use Frontend\Modules\Mailmotor\Engine\Model as FrontendMailmotorModel;
+use Common\Exception\RedirectException as RedirectException; 
 
 /**
  * This is the index-action
@@ -146,6 +147,11 @@ class Unsubscribe extends FrontendBaseBlock
                         FrontendNavigation::getURLForBlock('Mailmotor', 'Unsubscribe') . '?sent=true#unsubscribeForm'
                     );
                 } catch (\Exception $e) {
+                    // make sure RedirectExceptions get thrown  
+                    if ($e instanceof RedirectException) {  
+                        throw $e;  
+                    }  
+
                     // when debugging we need to see the exceptions
                     if ($this->getContainer()->getParameter('kernel.debug')) {
                         throw $e;
